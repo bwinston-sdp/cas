@@ -1,0 +1,12 @@
+description = "Apereo CAS Badge Authentication Support"
+ext {
+    publishMetadata = true
+    projectMetadata = [
+            category: "Authentication",
+            title: "Badge Authentication"
+    ]
+}
+
+dependencies {
+    implementation project(":core:cas-server-core-authentication-api")
+}
