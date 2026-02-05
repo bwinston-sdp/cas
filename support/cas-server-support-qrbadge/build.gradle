@@ -9,4 +9,5 @@ ext {
 
 dependencies {
     implementation project(":core:cas-server-core-authentication-api")
+    implementation project(":core:cas-server-core-util-api")
 }
