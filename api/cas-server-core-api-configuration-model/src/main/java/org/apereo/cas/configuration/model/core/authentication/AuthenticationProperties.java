@@ -3,6 +3,7 @@ package org.apereo.cas.configuration.model.core.authentication;
 import module java.base;
 import org.apereo.cas.configuration.model.core.authentication.passwordsync.PasswordSynchronizationProperties;
 import org.apereo.cas.configuration.model.support.azuread.AzureActiveDirectoryAuthenticationProperties;
+import org.apereo.cas.configuration.model.support.badge.BadgeAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.cassandra.authentication.CassandraAuthenticationProperties;
 import org.apereo.cas.configuration.model.support.clouddirectory.AmazonCloudDirectoryProperties;
 import org.apereo.cas.configuration.model.support.cognito.AmazonCognitoAuthenticationProperties;
@@ -322,4 +323,10 @@ public class AuthenticationProperties implements Serializable {
      */
     @NestedConfigurationProperty
     private AuthenticationAttributeReleaseProperties authenticationAttributeRelease = new AuthenticationAttributeReleaseProperties();
+
+    /**
+     * Badge authentication settings.
+     */
+    @NestedConfigurationProperty
+    private BadgeAuthenticationProperties badge = new BadgeAuthenticationProperties();
 }
