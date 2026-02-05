@@ -10,6 +10,8 @@ import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.configuration.features.CasFeatureModule;
 import org.apereo.cas.qrbadge.authentication.BadgeAuthenticationTokenCredential;
 import org.apereo.cas.qrbadge.authentication.BadgeAuthenticationTokenAuthenticationHandler;
+import org.apereo.cas.qrbadge.BadgeAuthenticationWebflowConfigurer;
+import org.apereo.cas.qrbadge.BadgeAuthenticationScanBadgeAction;
 //import org.apereo.cas.qr.QRAuthenticationConstants;
 //import org.apereo.cas.qr.authentication.JsonResourceQRAuthenticationDeviceRepository;
 //import org.apereo.cas.qr.authentication.QRAuthenticationDeviceRepository;
@@ -27,10 +29,10 @@ import org.apereo.cas.ticket.registry.TicketRegistry;
 //import org.apereo.cas.token.JwtBuilder;
 import org.apereo.cas.util.spring.boot.ConditionalOnFeatureEnabled;
 //import org.apereo.cas.web.CasWebSecurityConfigurer;
-//import org.apereo.cas.web.flow.CasWebflowConfigurer;
-//import org.apereo.cas.web.flow.CasWebflowConstants;
-//import org.apereo.cas.web.flow.CasWebflowExecutionPlanConfigurer;
-//import org.apereo.cas.web.flow.actions.WebflowActionBeanSupplier;
+import org.apereo.cas.web.flow.CasWebflowConfigurer;
+import org.apereo.cas.web.flow.CasWebflowConstants;
+import org.apereo.cas.web.flow.CasWebflowExecutionPlanConfigurer;
+import org.apereo.cas.web.flow.actions.WebflowActionBeanSupplier;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
@@ -100,37 +102,37 @@ public class CasBadgeAuthenticationAutoConfiguration {
 //        }
 //    }
 
-//    @Configuration(value = "QRAuthenticationWebflowPlanConfiguration", proxyBeanMethods = false)
-//    @EnableConfigurationProperties(CasConfigurationProperties.class)
-//    static class QRAuthenticationWebflowPlanConfiguration {
-//
-//        @Bean
-//        @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
-//        @ConditionalOnMissingBean(name = "qrAuthenticationCasWebflowExecutionPlanConfigurer")
-//        public CasWebflowExecutionPlanConfigurer qrAuthenticationCasWebflowExecutionPlanConfigurer(
-//                @Qualifier("qrAuthenticationWebflowConfigurer")
-//                final CasWebflowConfigurer qrAuthenticationWebflowConfigurer) {
-//            return plan -> plan.registerWebflowConfigurer(qrAuthenticationWebflowConfigurer);
-//        }
-//
-//    }
+    @Configuration(value = "BadgeAuthenticationWebflowPlanConfiguration", proxyBeanMethods = false)
+    @EnableConfigurationProperties(CasConfigurationProperties.class)
+    static class BadgeAuthenticationWebflowPlanConfiguration {
 
-//    @Configuration(value = "QRAuthenticationWebflowConfiguration", proxyBeanMethods = false)
-//    @EnableConfigurationProperties(CasConfigurationProperties.class)
-//    static class QRAuthenticationWebflowConfiguration {
-//        @ConditionalOnMissingBean(name = "qrAuthenticationWebflowConfigurer")
-//        @Bean
-//        @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
-//        public CasWebflowConfigurer qrAuthenticationWebflowConfigurer(
-//                final CasConfigurationProperties casProperties, final ConfigurableApplicationContext applicationContext,
-//                @Qualifier(CasWebflowConstants.BEAN_NAME_FLOW_DEFINITION_REGISTRY)
-//                final FlowDefinitionRegistry flowDefinitionRegistry,
-//                @Qualifier(CasWebflowConstants.BEAN_NAME_FLOW_BUILDER_SERVICES)
-//                final FlowBuilderServices flowBuilderServices) {
-//            return new QRAuthenticationWebflowConfigurer(flowBuilderServices, flowDefinitionRegistry, applicationContext, casProperties);
-//        }
-//
-//    }
+        @Bean
+        @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
+        @ConditionalOnMissingBean(name = "badgeAuthenticationCasWebflowExecutionPlanConfigurer")
+        public CasWebflowExecutionPlanConfigurer badgeAuthenticationCasWebflowExecutionPlanConfigurer(
+                @Qualifier("badgeAuthenticationWebflowConfigurer")
+                final CasWebflowConfigurer badgeAuthenticationWebflowConfigurer) {
+            return plan -> plan.registerWebflowConfigurer(badgeAuthenticationWebflowConfigurer);
+        }
+
+    }
+
+    @Configuration(value = "BadgeAuthenticationWebflowConfiguration", proxyBeanMethods = false)
+    @EnableConfigurationProperties(CasConfigurationProperties.class)
+    static class BadgeAuthenticationWebflowConfiguration {
+        @ConditionalOnMissingBean(name = "badgeAuthenticationWebflowConfigurer")
+        @Bean
+        @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
+        public CasWebflowConfigurer badgeAuthenticationWebflowConfigurer(
+                final CasConfigurationProperties casProperties, final ConfigurableApplicationContext applicationContext,
+                @Qualifier(CasWebflowConstants.BEAN_NAME_FLOW_DEFINITION_REGISTRY)
+                final FlowDefinitionRegistry flowDefinitionRegistry,
+                @Qualifier(CasWebflowConstants.BEAN_NAME_FLOW_BUILDER_SERVICES)
+                final FlowBuilderServices flowBuilderServices) {
+            return new BadgeAuthenticationWebflowConfigurer(flowBuilderServices, flowDefinitionRegistry, applicationContext, casProperties);
+        }
+
+    }
 
     @Configuration(value = "BadgeAuthenticationHandlerPlanConfiguration", proxyBeanMethods = false)
     @EnableConfigurationProperties(CasConfigurationProperties.class)
@@ -250,9 +252,9 @@ public class CasBadgeAuthenticationAutoConfiguration {
 //
 //    }
 //
-//    @Configuration(value = "QRAuthenticationWebflowActionConfiguration", proxyBeanMethods = false)
-//    @EnableConfigurationProperties(CasConfigurationProperties.class)
-//    static class QRAuthenticationWebflowActionConfiguration {
+    @Configuration(value = "BadgeAuthenticationWebflowActionConfiguration", proxyBeanMethods = false)
+    @EnableConfigurationProperties(CasConfigurationProperties.class)
+    static class BadgeAuthenticationWebflowActionConfiguration {
 //        @Bean
 //        @ConditionalOnMissingBean(name = CasWebflowConstants.ACTION_ID_QR_AUTHENTICATION_VALIDATE_CHANNEL)
 //        @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
@@ -267,20 +269,20 @@ public class CasBadgeAuthenticationAutoConfiguration {
 //                    .build()
 //                    .get();
 //        }
-//
-//        @Bean
-//        @ConditionalOnMissingBean(name = CasWebflowConstants.ACTION_ID_QR_AUTHENTICATION_GENERATE_CODE)
-//        @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
-//        public Action qrAuthenticationGenerateCodeAction(final ConfigurableApplicationContext applicationContext,
-//                                                         final CasConfigurationProperties casProperties) {
-//            return WebflowActionBeanSupplier.builder()
-//                    .withApplicationContext(applicationContext)
-//                    .withProperties(casProperties)
-//                    .withAction(QRAuthenticationGenerateCodeAction::new)
-//                    .withId(CasWebflowConstants.ACTION_ID_QR_AUTHENTICATION_GENERATE_CODE)
-//                    .build()
-//                    .get();
-//        }
-//
-//    }
+
+        @Bean
+        @ConditionalOnMissingBean(name = CasWebflowConstants.ACTION_ID_BADGE_AUTHENTICATION_SCAN_BADGE)
+        @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
+        public Action badgeAuthenticationScanBadgeAction(final ConfigurableApplicationContext applicationContext,
+                                                         final CasConfigurationProperties casProperties) {
+            return WebflowActionBeanSupplier.builder()
+                    .withApplicationContext(applicationContext)
+                    .withProperties(casProperties)
+                    .withAction(BadgeAuthenticationScanBadgeAction::new)
+                    .withId(CasWebflowConstants.ACTION_ID_BADGE_AUTHENTICATION_SCAN_BADGE)
+                    .build()
+                    .get();
+        }
+
+    }
 }

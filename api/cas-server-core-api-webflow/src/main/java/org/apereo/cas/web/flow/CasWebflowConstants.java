@@ -2373,4 +2373,9 @@ public interface CasWebflowConstants {
      * The action id 'oktaPrincipalProvisionerAction'.
      */
     String ACTION_ID_OKTA_PRINCIPAL_PROVISIONER_ACTION = "oktaPrincipalProvisionerAction";
+
+    /**
+     * Action id 'badgeAuthenticationScanBadgeAction'.
+     */
+    String ACTION_ID_BADGE_AUTHENTICATION_SCAN_BADGE = "badgeAuthenticationScanBadgeAction";
 }
